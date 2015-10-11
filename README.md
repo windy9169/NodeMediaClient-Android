@@ -32,5 +32,5 @@ fms, wowza, evostream, red5, crtmpserver, nginx-rtmp-module, srs, Node-Media-Ser
 ##商用授权
 可在应用程序包名为cn.nodemedia.* 下试用体验  
 程序发布需商用授权，业务咨询请联系  
-QQ:281269008  
+QQ:281269007  
 Email:service@nodemedia.cn
