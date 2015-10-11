@@ -1,14 +1,20 @@
-#NodeMediaClient Android Demo
+#NodeMediaClient-Android
+
 ##简介
 NodeMediaClient是为移动端应用量身打造的基于RTMP协议的流媒体直播系统。通过集成本SDK，只需几个简单API调用，便可实现一套完整的直播流媒体应用基础。包含了流媒体应用中：『采集->编码->传输->解码->播放』的所有步骤。
+
 ##支持的平台
 Android 2.3及以上
+
 ##支持的CPU架构
 armeabi-v7a arm64-v8a x86
+
 ##支持的流媒体服务端
-fms, wowza, evostream, red5, crtmpserver, nginx-rtmp-module, srs, Node-Media-Server
-##支持的流媒体云服务
-奥点云，七牛云
+fms, wowza, evostream, red5, crtmpserver, nginx-rtmp-module, srs, Node-Media-Server及其他标准RTMP协议服务端
+
+##支持的流媒体云服务器
+奥点云，七牛云及其他标准RTMP协议云服务器
+
 ##直播发布特性
 * H.264/AAC 组合的RTMP协议音视频流发布
 * 全屏视频采集，720p原画质缩放
