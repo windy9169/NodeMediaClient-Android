@@ -60,7 +60,12 @@ public class LivePlayerDemoActivity extends Activity {
 			logText.setVisibility(View.GONE);
 		}
 		
-		LivePlayer.setUIVIew(sv);
+		if(enableVideo) {
+			LivePlayer.setUIVIew(sv);
+		} else {
+			LivePlayer.setUIVIew(null);
+		}
+		
 
 		/**
 		 * 设置本地播放缓冲时长 rtmp流本地缓冲队列时长，单位毫秒,默认1000ms
@@ -77,6 +82,13 @@ public class LivePlayerDemoActivity extends Activity {
 		 */
 		// LivePlayer.startPlay(playUrl);
 		LivePlayer.startPlay(playUrl, "http://pageUrl.com", "htt://swfurl.com");
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		LivePlayer.stopPlay();
+		
 	}
 
 	/**
@@ -110,18 +122,7 @@ public class LivePlayerDemoActivity extends Activity {
 		sv.setLayoutParams(lp);
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				//stopPlay 为同步阻塞方法，
-				LivePlayer.stopPlay();
-			}
-		}).start();
-		
-	}
+
 
 	private Handler handler = new Handler() {
 		// 回调处理
@@ -152,7 +153,7 @@ public class LivePlayerDemoActivity extends Activity {
 				// Toast.LENGTH_SHORT).show();
 				break;
 			case 1004:
-				Toast.makeText(LivePlayerDemoActivity.this, "视频播放结束", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(LivePlayerDemoActivity.this, "视频播放结束", Toast.LENGTH_SHORT).show();
 				break;
 			case 1005:
 				// Toast.makeText(LivePlayerDemoActivity.this, "网络异常,播放中断",
@@ -176,6 +177,9 @@ public class LivePlayerDemoActivity extends Activity {
 				break;
 			case 1100:
 				System.out.println("NetStream.Buffer.Empty");
+				break;
+			case 1101:
+				System.out.println("NetStream.Buffer.Buffering");
 				break;
 			case 1102:
 				System.out.println("NetStream.Buffer.Full");

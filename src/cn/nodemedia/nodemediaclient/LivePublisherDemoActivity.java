@@ -58,9 +58,19 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		 * 高 360
 		 * fps 15
 		 * 码率 300kbps
+		 * 以下建议分辨率及比特率 不用超过1280x720
+		 *  320X180@15 ~~ 200kbps
+        	480X272@15 ~~ 250kbps
+        	568x320@15 ~~ 300kbps
+        	640X360@15 ~~ 400kbps
+        	720x405@15 ~~ 500kbps
+        	854x480@15 ~~ 600kbps
+        	960x540@15 ~~ 700kbps
+        	1024x576@15 ~~ 800kbps
+        	1280x720@15 ~~ 1000kbps
 		 * 使用main profile 
 		 */
-		LivePublisher.setVideoParam(640, 360, 15, 300 * 1000, LivePublisher.AVC_PROFILE_MAIN);
+		LivePublisher.setVideoParam(640, 360, 15, 400 * 1000, LivePublisher.AVC_PROFILE_MAIN);
 		
 		/**
 		 * 是否开启背景噪音抑制
@@ -119,17 +129,18 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 				 *设置视频发布的方向，此方法为可选，如果不调用，则输出视频方向跟随界面方向，如果特定指出视频方向，在startPublish前调用设置
 				 *videoOrientation ： 视频方向
 				 *VIDEO_ORI_PORTRAIT			home键在 下 的 9:16 竖屏方向
-				 *VIDEO_ORI_LANDSCAPE			home键在 右 的16:9 横屏方向
-				 *VIDEO_ORI_PORTRAIT_REVERSE	home键在 上 的9:16 竖屏方向
-				 *VIDEO_ORI_LANDSCAPE_REVERSE	home键在 左的 16:9 横屏方向
+				 *VIDEO_ORI_LANDSCAPE			home键在 右 的 16:9 横屏方向
+				 *VIDEO_ORI_PORTRAIT_REVERSE	home键在 上 的 9:16 竖屏方向
+				 *VIDEO_ORI_LANDSCAPE_REVERSE	home键在 左 的 16:9 横屏方向
 				 */
-				LivePublisher.setVideoOrientation(LivePublisher.VIDEO_ORI_PORTRAIT);
+//				LivePublisher.setVideoOrientation(LivePublisher.VIDEO_ORI_PORTRAIT);
 				
 				/**
 				 * 开始视频发布
 				 * rtmpUrl  rtmp流地址
 				 */
-				LivePublisher.startPublish((String)SharedPreUtil.get(LivePublisherDemoActivity.this, "pubUrl", "rtmp://192.168.0.10/live/demo")); // 开始发布
+				LivePublisher.startPublish((String)SharedPreUtil.get(LivePublisherDemoActivity.this, "pubUrl", "rtmp://192.168.0.10/live/demo") );
+//				LivePublisher.startPublish((String)SharedPreUtil.get(LivePublisherDemoActivity.this, "pubUrl", "rtmp://192.168.0.10/live/demo"), "http://www.pageurl.com","http://www.swfurl.com/" ); // 开始发布
 			}
 			break;
 		case R.id.button_flash:
