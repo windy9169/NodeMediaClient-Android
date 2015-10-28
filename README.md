@@ -13,7 +13,7 @@ armeabi-v7a arm64-v8a x86
 fms, wowza, evostream, red5, crtmpserver, nginx-rtmp-module, srs, Node-Media-Server及其他标准RTMP协议服务端
 
 ##支持的流媒体云服务器
-奥点云，七牛云及其他标准RTMP协议云服务器
+[奥点云](http://www.aodianyun.com/)及其他标准RTMP协议云服务器
 
 ##直播发布特性
 * H.264/AAC 组合的RTMP协议音视频流发布
