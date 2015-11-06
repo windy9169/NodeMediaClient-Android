@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -90,8 +91,29 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
+		//注意：如果你的业务方案需求只做单一方向的视频直播，可以不处理这段
+		
 		//如果程序UI没有锁定屏幕方向，旋转手机后，请把新的界面方向传入，以调整摄像头预览方向
 		LivePublisher.setCameraOrientation(getWindowManager().getDefaultDisplay().getRotation());
+		
+		 //还没有开始发布视频的时候，可以跟随界面旋转的方向设置视频与当前界面方向一致，但一经开始发布视频，是不能修改视频发布方向的了
+	    //请注意：如果视频发布过程中旋转了界面，停止发布，再开始发布，是不会触发"onConfigurationChanged"进入这个参数设置的
+		if(!isStarting) {
+			switch(getWindowManager().getDefaultDisplay().getRotation()) {
+			case Surface.ROTATION_0:
+				LivePublisher.setVideoOrientation(LivePublisher.VIDEO_ORI_PORTRAIT);
+				break;
+			case Surface.ROTATION_90:
+				LivePublisher.setVideoOrientation(LivePublisher.VIDEO_ORI_LANDSCAPE);
+				break;
+			case Surface.ROTATION_180:
+				LivePublisher.setVideoOrientation(LivePublisher.VIDEO_ORI_PORTRAIT_REVERSE);
+				break;
+			case Surface.ROTATION_270:
+				LivePublisher.setVideoOrientation(LivePublisher.VIDEO_ORI_LANDSCAPE_REVERSE);
+				break;
+			}
+		}
 	}
 
 	@Override
