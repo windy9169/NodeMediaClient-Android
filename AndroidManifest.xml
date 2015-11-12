@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-	<uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
         android:allowBackup="true"
@@ -30,17 +30,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="cn.nodemedia.nodemediaclient.LivePlayerDemoActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
         </activity>
-        
         <activity
             android:name="cn.nodemedia.nodemediaclient.LivePublisherDemoActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="cn.nodemedia.nodemediaclient.LiveChatActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
         </activity>
     </application>
 

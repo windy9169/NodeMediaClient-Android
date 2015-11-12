@@ -88,7 +88,7 @@ public class LivePlayerDemoActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		LivePlayer.stopPlay();
-		
+		LivePlayer.setDelegate(null);
 	}
 
 	/**

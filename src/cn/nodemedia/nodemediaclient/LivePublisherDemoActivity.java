@@ -121,6 +121,7 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		super.onDestroy();
 		LivePublisher.stopPreview();
 		LivePublisher.stopPublish();
+		LivePublisher.setDelegate(null);
 	}
 
 	@Override
