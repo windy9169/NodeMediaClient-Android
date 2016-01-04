@@ -23,4 +23,12 @@
         android:textColor="#EEEEEE"
         android:textSize="10sp" />
 
+    <Button
+        android:id="@+id/play_cap_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="Cap" />
+
 </RelativeLayout>

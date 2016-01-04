@@ -3,17 +3,17 @@ package cn.nodemedia.nodemediaclient;
 import java.text.SimpleDateFormat;
 
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import cn.nodemedia.LivePlayer;
@@ -30,6 +30,7 @@ public class LivePlayerDemoActivity extends Activity {
 	float srcWidth;
 	float srcHeight;
 	DisplayMetrics dm;
+	Button capBtn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +38,8 @@ public class LivePlayerDemoActivity extends Activity {
 		setContentView(R.layout.activity_player);
 		dm = getResources().getDisplayMetrics();
 
-		showLog = (Boolean) SharedPreUtil.get(this, "enablePlayLog", true);
-		enableVideo = (Boolean) SharedPreUtil.get(this, "enableVideo", true);
+		showLog = (Boolean) SharedPreUtil.getBoolean(this, "enablePlayLog");
+		enableVideo = (Boolean) SharedPreUtil.getBoolean(this, "enableVideo");
 
 		LivePlayer.init(this);
 		LivePlayer.setDelegate(new LivePlayerDelegate() {
@@ -52,47 +53,87 @@ public class LivePlayerDemoActivity extends Activity {
 				handler.sendMessage(message);
 			}
 		});
-		
+
 		sv = (SurfaceView) findViewById(R.id.surfaceview1);
-		
+		capBtn = (Button) findViewById(R.id.play_cap_button);
+		capBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String capFilePath = Environment.getExternalStorageDirectory().getPath() + "/play_cap.jpg";
+				if (LivePlayer.capturePicture(capFilePath)) {
+					Toast.makeText(LivePlayerDemoActivity.this, "截图保存到 " + capFilePath, Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(LivePlayerDemoActivity.this, "截图保存失败", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+
 		logText = (EditText) findViewById(R.id.editText3);
 		if (!showLog) {
 			logText.setVisibility(View.GONE);
 		}
-		
-		if(enableVideo) {
+
+		if (enableVideo) {
 			LivePlayer.setUIVIew(sv);
 		} else {
 			LivePlayer.setUIVIew(null);
 		}
+
+		/**
+		 * 设置缓冲区时长，与flash编程时一样，可以设置2个值
+		 * 第一个bufferTime为从连接成功到开始播放的启动缓冲区长度，越小启动速度越快，最小100毫秒
+		 * 注意：声音因为没有关键帧，所以这个缓冲区足够马上就可以听到声音，但视频需要等待关键帧后才会开始显示画面。
+		 * 如果你的服务器支持GOP_cache可以开启来加快画面的出现
+		 */
+		int bufferTime = Integer.valueOf(SharedPreUtil.getString(this, "bufferTime")); // 获取上一个页面设置的bufferTIme，非sdk方法
+		LivePlayer.setBufferTime(bufferTime);
 		
+		/**
+		 * maxBufferTime为最大缓冲区，当遇到网络抖动，较大的maxBufferTime更加平滑，但延迟也会跟着增加。
+		 * 这个值关乎延迟的大小。
+		 */
+		int maxBufferTime = Integer.valueOf(SharedPreUtil.getString(this, "maxBufferTime"));;// 获取上一个页面设置的maxBufferTIme，非sdk方法
+		LivePlayer.setMaxBufferTime(maxBufferTime);
+
+		String playUrl = SharedPreUtil.getString(this, "playUrl");// 获取上一页设置的播放地址，非sdk方法
 
 		/**
-		 * 设置本地播放缓冲时长 rtmp流本地缓冲队列时长，单位毫秒,默认1000ms
-		 * 
+		 * 开始播放
 		 */
-		LivePlayer.setBufferTime(Integer.valueOf((String) SharedPreUtil.get(LivePlayerDemoActivity.this, "bufferTime", "1000")));
-
-
-		String playUrl = (String) SharedPreUtil.get(LivePlayerDemoActivity.this, "playUrl", "rtmp://192.168.0.10/live/demo");
-		SharedPreUtil.put(LivePlayerDemoActivity.this, "playUrl", playUrl); // 记住上次输入的测试地址，只在demo中用，非SDK方法
-
+		LivePlayer.startPlay(playUrl);
+		
 		/**
-		 * 开始播放 三个参数，分别是： rtmpUrl 必填 ，pageUrl 选填 ，swfUrl 选填
+		 * Demo调试用例，每200毫秒获取一次缓冲时长 单位毫秒
 		 */
-		// LivePlayer.startPlay(playUrl);
-		LivePlayer.startPlay(playUrl, "http://pageUrl.com", "htt://swfurl.com");
+//		new Thread(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				while(!LivePlayerDemoActivity.this.isFinishing()) {
+//					Log.d("NodeMedia.java","BufferLength:"+LivePlayer.getBufferLength());
+//					try {
+//						Thread.sleep(200);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//			}
+//		}).start();
+//				
+		
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		LivePlayer.stopPlay();
-		
+
 	}
 
 	/**
-	 *监听手机旋转，不销毁activity进行画面旋转，再缩放显示区域
+	 * 监听手机旋转，不销毁activity进行画面旋转，再缩放显示区域
 	 */
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -116,13 +157,11 @@ public class LivePlayerDemoActivity extends Activity {
 			fixHeight = srcHeight * maxWidth / srcWidth;
 		}
 		ViewGroup.LayoutParams lp = sv.getLayoutParams();
-		lp.width = (int)fixWidth;
-		lp.height = (int)fixHeight;
-		
+		lp.width = (int) fixWidth;
+		lp.height = (int) fixHeight;
+
 		sv.setLayoutParams(lp);
 	}
-
-
 
 	private Handler handler = new Handler() {
 		// 回调处理
@@ -151,41 +190,38 @@ public class LivePlayerDemoActivity extends Activity {
 			case 1002:
 				// Toast.makeText(LivePlayerDemoActivity.this, "视频连接失败",
 				// Toast.LENGTH_SHORT).show();
+				//流地址不存在，或者本地网络无法和服务端通信，回调这里。5秒后重连， 可停止
+				//LivePlayer.stopPlay(); 
+				break;
+			case 1003:
+				//Toast.makeText(LivePlayerDemoActivity.this, "视频开始重连",
+				//LivePlayer.stopPlay();	//自动重连总开关
 				break;
 			case 1004:
-//				Toast.makeText(LivePlayerDemoActivity.this, "视频播放结束", Toast.LENGTH_SHORT).show();
+				// Toast.makeText(LivePlayerDemoActivity.this, "视频播放结束",
+				// Toast.LENGTH_SHORT).show();
 				break;
 			case 1005:
 				// Toast.makeText(LivePlayerDemoActivity.this, "网络异常,播放中断",
 				// Toast.LENGTH_SHORT).show();
-				break;
-			case 1006:
-				// Toast.makeText(LivePlayerDemoActivity.this, "视频数据未找到",
-				// Toast.LENGTH_SHORT).show();
-				break;
-			case 1007:
-				// Toast.makeText(LivePlayerDemoActivity.this, "音频数据未找到",
-				// Toast.LENGTH_SHORT).show();
-				break;
-			case 1008:
-				// Toast.makeText(LivePlayerDemoActivity.this, "无法打开视频解码器",
-				// Toast.LENGTH_SHORT).show();
-				break;
-			case 1009:
-				// Toast.makeText(LivePlayerDemoActivity.this, "无法打开音频解码器",
-				// Toast.LENGTH_SHORT).show();
+				//播放中途网络异常，回调这里。1秒后重连，如不需要，可停止
+				//LivePlayer.stopPlay(); 
 				break;
 			case 1100:
-				System.out.println("NetStream.Buffer.Empty");
+//				System.out.println("NetStream.Buffer.Empty");
 				break;
 			case 1101:
-				System.out.println("NetStream.Buffer.Buffering");
+//				System.out.println("NetStream.Buffer.Buffering");
 				break;
 			case 1102:
-				System.out.println("NetStream.Buffer.Full");
+//				System.out.println("NetStream.Buffer.Full");
 				break;
 			case 1103:
-				System.out.println("Stream EOF");
+//				System.out.println("Stream EOF");
+				//客服端明确收到服务端发送来的 StreamEOF 和 NetStream.Play.UnpublishNotify时回调这里
+				//收到本事件，说明：此流的发布者明确停止了发布，或者网络异常，被服务端明确关闭了流
+				//本sdk仍然会继续在1秒后重连，如不需要，可停止
+//				LivePlayer.stopPlay(); 
 				break;
 			case 1104:
 				/**
