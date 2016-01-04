@@ -27,6 +27,7 @@ fms, wowza, evostream, red5, crtmpserver, nginx-rtmp-module, srs, Node-Media-Ser
 * 支持闪光灯开关
 * 支持全时自动对焦
 * 支持单音频流发布
+* 支持预览摄像头后,任意时刻截图
 
 ##直播播放特性
 * 只为RTMP协议优化的码流解析器，极短的分析时间，秒开RTMP视频流
@@ -34,6 +35,9 @@ fms, wowza, evostream, red5, crtmpserver, nginx-rtmp-module, srs, Node-Media-Ser
 * 支持的视频解码器:H.264, FLV, VP6
 * 支持的音频解码器:AAC, MP3, SPEEX, NELLYMOSER, ADPCM_SWF, G.711
 * OpenGL ES视频渲染
+* 全自动网络异常重连
+* 支持播放中途任意时刻截图
+* 支持设置最大缓冲时长
 
 ##商用授权
 可在应用程序包名为cn.nodemedia.* 下试用体验  
