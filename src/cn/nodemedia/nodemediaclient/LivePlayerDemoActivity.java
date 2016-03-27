@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -96,8 +97,15 @@ public class LivePlayerDemoActivity extends Activity {
 		int maxBufferTime = Integer.valueOf(SharedPreUtil.getString(this, "maxBufferTime"));;// 获取上一个页面设置的maxBufferTIme，非sdk方法
 		LivePlayer.setMaxBufferTime(maxBufferTime);
 
+		/**
+		 * 设置是否接收音视频流  协议参考 rtmp_specification_1.0.pdf 7.2.2.4. & 7.2.2.5.
+		 * 默认值都为true 如不需要该功能可以不设置该值
+		 * 注意：目前测试了fms和red5支持该参数设定有效，欢迎测试补充。目前版本只在开始播放前设置有效，中途无法变更。
+		 */
+//		LivePlayer.receiveAudio(true);
+//		LivePlayer.receiveVideo(false);
+		
 		String playUrl = SharedPreUtil.getString(this, "playUrl");// 获取上一页设置的播放地址，非sdk方法
-
 		/**
 		 * 开始播放
 		 */

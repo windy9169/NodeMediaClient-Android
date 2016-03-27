@@ -1,5 +1,7 @@
 package cn.nodemedia.nodemediaclient;
 
+import java.security.PublicKey;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -60,7 +62,7 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		 * 960x540@15 ~~ 700kbps 1024x576@15 ~~ 800kbps 1280x720@15 ~~ 1000kbps
 		 * 使用main profile
 		 */
-		LivePublisher.setVideoParam(640, 360, 15, 400 * 1000, LivePublisher.AVC_PROFILE_MAIN);
+		LivePublisher.setVideoParam(640, 360, 15, 400 * 1000, LivePublisher.AVC_PROFILE_BASELINE);
 
 		/**
 		 * 是否开启背景噪音抑制
@@ -70,7 +72,7 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		/**
 		 * 开始视频预览， cameraPreview ： 用以回显摄像头预览的SurfaceViewd对象，如果此参数传入null，则只发布音频
 		 * interfaceOrientation ： 程序界面的方向，也做调整摄像头旋转度数的参数， camId：
-		 * 摄像头初始id，LivePublisher.CAMERA_BACK 后置，LivePublisher.CAMERA_FRONE 前置
+		 * 摄像头初始id，LivePublisher.CAMERA_BACK 后置，LivePublisher.CAMERA_FRONT 前置
 		 */
 		LivePublisher.startPreview(sv, getWindowManager().getDefaultDisplay().getRotation(), LivePublisher.CAMERA_BACK); // 5.开始预览
 																															// 如果传null
@@ -129,9 +131,9 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 				isMicOn = !isMicOn;
 				LivePublisher.setMicEnable(isMicOn); // 设置是否打开麦克风
 				if (isMicOn) {
-					handler.sendEmptyMessage(2101);
+					handler.sendEmptyMessage(3101);
 				} else {
-					handler.sendEmptyMessage(2100);
+					handler.sendEmptyMessage(3100);
 				}
 			}
 			break;
@@ -154,6 +156,16 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 				 */
 				// LivePublisher.setVideoOrientation(LivePublisher.VIDEO_ORI_PORTRAIT);
 
+				/**
+				 * 设置发布模式 
+				 * 参考 rtmp_specification_1.0.pdf 7.2.2.6. publish
+				 * LivePublisher。PUBLISH_TYPE_LIVE			'live' 发布类型
+				 * LivePublisher。PUBLISH_TYPE_RECORD		'record' 发布类型
+				 * LivePublisher。PUBLISH_TYPE_APPEND		'append' 发布类型
+				 */
+//				LivePublisher.setPublishType(LivePublisher.PUBLISH_TYPE_RECORD); //
+				
+				
 				/**
 				 * 开始视频发布 rtmpUrl rtmp流地址
 				 */
@@ -185,9 +197,9 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 				isCamOn = !isCamOn;
 				LivePublisher.setCamEnable(isCamOn);
 				if (isCamOn) {
-					handler.sendEmptyMessage(2103);
+					handler.sendEmptyMessage(3103);
 				} else {
-					handler.sendEmptyMessage(2102);
+					handler.sendEmptyMessage(3102);
 				}
 			}
 			break;
@@ -227,21 +239,31 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 				Toast.makeText(LivePublisherDemoActivity.this, "网络异常,发布中断", Toast.LENGTH_SHORT).show();
 				break;
 			case 2100:
+				 //发布端网络阻塞，已缓冲了2秒的数据在队列中
+				Toast.makeText(LivePublisherDemoActivity.this, "网络阻塞，发布卡顿", Toast.LENGTH_SHORT).show();
+				break;
+			case 2101:
+				//发布端网络恢复畅通
+				Toast.makeText(LivePublisherDemoActivity.this, "网络恢复，发布流畅", Toast.LENGTH_SHORT).show();
+				break;
+				
+				
+			case 3100:
 				// mic off
 				micBtn.setBackgroundResource(R.drawable.ic_mic_off);
 				Toast.makeText(LivePublisherDemoActivity.this, "麦克风静音", Toast.LENGTH_SHORT).show();
 				break;
-			case 2101:
+			case 3101:
 				// mic on
 				micBtn.setBackgroundResource(R.drawable.ic_mic_on);
 				Toast.makeText(LivePublisherDemoActivity.this, "麦克风恢复", Toast.LENGTH_SHORT).show();
 				break;
-			case 2102:
+			case 3102:
 				// camera off
 				camBtn.setBackgroundResource(R.drawable.ic_cam_off);
 				Toast.makeText(LivePublisherDemoActivity.this, "摄像头传输关闭", Toast.LENGTH_SHORT).show();
 				break;
-			case 2103:
+			case 3103:
 				// camera on
 				camBtn.setBackgroundResource(R.drawable.ic_cam_on);
 				Toast.makeText(LivePublisherDemoActivity.this, "摄像头传输打开", Toast.LENGTH_SHORT).show();
