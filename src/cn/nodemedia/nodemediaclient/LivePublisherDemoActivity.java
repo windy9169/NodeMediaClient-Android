@@ -74,7 +74,7 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		 * interfaceOrientation ： 程序界面的方向，也做调整摄像头旋转度数的参数， camId：
 		 * 摄像头初始id，LivePublisher.CAMERA_BACK 后置，LivePublisher.CAMERA_FRONT 前置
 		 */
-		LivePublisher.startPreview(sv, getWindowManager().getDefaultDisplay().getRotation(), LivePublisher.CAMERA_BACK); // 5.开始预览
+		LivePublisher.startPreview(sv, getWindowManager().getDefaultDisplay().getRotation(), LivePublisher.CAMERA_FRONT); // 5.开始预览
 																															// 如果传null
 																															// 则只发布音频
 	}
