@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import cn.nodemedia.LivePlayer;
-import cn.nodemedia.LivePlayer.LivePlayerDelegate;
+import cn.nodemedia.LivePlayerDelegate;
 
 public class LivePlayerDemoActivity extends Activity {
 	// LinearLayout liner0;

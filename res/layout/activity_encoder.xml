@@ -3,10 +3,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <SurfaceView
-        android:id="@+id/cameraView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+	<android.opengl.GLSurfaceView
+	    android:id="@+id/camera_preview"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">
+	</android.opengl.GLSurfaceView>
+
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
@@ -67,5 +69,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:text="Cap" />
+
+    <SeekBar
+        android:id="@+id/pub_level_seekBar"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLayout1"
+        android:layout_marginBottom="30dp" />
 
 </RelativeLayout>

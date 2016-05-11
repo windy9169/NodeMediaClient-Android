@@ -1,25 +1,26 @@
 package cn.nodemedia.nodemediaclient;
 
-import java.security.PublicKey;
-
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Surface;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
+import cn.nodemedia.LivePublishDelegate;
 import cn.nodemedia.LivePublisher;
-import cn.nodemedia.LivePublisher.LivePublishDelegate;
 
 public class LivePublisherDemoActivity extends Activity implements OnClickListener, LivePublishDelegate {
-	private SurfaceView sv;
+	private GLSurfaceView glsv;
 	private Button micBtn, swtBtn, videoBtn, flashBtn, camBtn;
+	private SeekBar mLevelSB;
 	private boolean isStarting = false;
 	private boolean isMicOn = true;
 	private boolean isCamOn = true;
@@ -32,14 +33,15 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_encoder);
 		isStarting = false;
-		sv = (SurfaceView) findViewById(R.id.cameraView);
+		glsv = (GLSurfaceView) findViewById(R.id.camera_preview);
 		micBtn = (Button) findViewById(R.id.button_mic);
 		swtBtn = (Button) findViewById(R.id.button_sw);
 		videoBtn = (Button) findViewById(R.id.button_video);
 		flashBtn = (Button) findViewById(R.id.button_flash);
 		camBtn = (Button) findViewById(R.id.button_cam);
 		capBtn = (Button) findViewById(R.id.pub_cap_button);
-
+		mLevelSB = (SeekBar) findViewById(R.id.pub_level_seekBar);
+		
 		micBtn.setOnClickListener(this);
 		swtBtn.setOnClickListener(this);
 		videoBtn.setOnClickListener(this);
@@ -47,6 +49,26 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		camBtn.setOnClickListener(this);
 		capBtn.setOnClickListener(this);
 
+		mLevelSB.setMax(5);
+		mLevelSB.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				LivePublisher.setSmoothSkinLevel(progress);
+			}
+		});
 		LivePublisher.init(this); // 1.初始化
 		LivePublisher.setDelegate(this); // 2.设置事件回调
 
@@ -62,7 +84,7 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		 * 960x540@15 ~~ 700kbps 1024x576@15 ~~ 800kbps 1280x720@15 ~~ 1000kbps
 		 * 使用main profile
 		 */
-		LivePublisher.setVideoParam(640, 360, 15, 400 * 1000, LivePublisher.AVC_PROFILE_BASELINE);
+		LivePublisher.setVideoParam(854, 480, 15, 600 * 1000, LivePublisher.AVC_PROFILE_MAIN);
 
 		/**
 		 * 是否开启背景噪音抑制
@@ -70,13 +92,14 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		LivePublisher.setDenoiseEnable(true);
 
 		/**
-		 * 开始视频预览， cameraPreview ： 用以回显摄像头预览的SurfaceViewd对象，如果此参数传入null，则只发布音频
-		 * interfaceOrientation ： 程序界面的方向，也做调整摄像头旋转度数的参数， camId：
-		 * 摄像头初始id，LivePublisher.CAMERA_BACK 后置，LivePublisher.CAMERA_FRONT 前置
+		 * 开始视频预览
+		 * cameraPreview ： 用以回显摄像头预览的GLSurfaceViewd对象，如果此参数传入null，则只发布音频
+		 * camId： 摄像头初始id，LivePublisher.CAMERA_BACK 后置，LivePublisher.CAMERA_FRONT 前置
+		 * frontMirror: 是否启用前置摄像头镜像模式。当为true时，预览画面为镜像画面。当为false时，预览画面为原始画面
+		 * 镜像画面就是平时使用系统照相机切换前置摄像头时所显示的画面，就像自己照镜子看到的画面。
+		 * 原始画面就是最终保存或传输到观看者所显示的画面。
 		 */
-		LivePublisher.startPreview(sv, getWindowManager().getDefaultDisplay().getRotation(), LivePublisher.CAMERA_FRONT); // 5.开始预览
-																															// 如果传null
-																															// 则只发布音频
+		LivePublisher.startPreview(glsv, LivePublisher.CAMERA_FRONT, true);
 	}
 
 	@Override
@@ -85,7 +108,7 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		// 注意：如果你的业务方案需求只做单一方向的视频直播，可以不处理这段
 
 		// 如果程序UI没有锁定屏幕方向，旋转手机后，请把新的界面方向传入，以调整摄像头预览方向
-		LivePublisher.setCameraOrientation(getWindowManager().getDefaultDisplay().getRotation());
+//		LivePublisher.setCameraOrientation(getWindowManager().getDefaultDisplay().getRotation());
 
 		// 还没有开始发布视频的时候，可以跟随界面旋转的方向设置视频与当前界面方向一致，但一经开始发布视频，是不能修改视频发布方向的了
 		// 请注意：如果视频发布过程中旋转了界面，停止发布，再开始发布，是不会触发"onConfigurationChanged"进入这个参数设置的
@@ -154,7 +177,7 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 				 * VIDEO_ORI_PORTRAIT_REVERSE home键在 上 的 9:16 竖屏方向
 				 * VIDEO_ORI_LANDSCAPE_REVERSE home键在 左 的 16:9 横屏方向
 				 */
-				// LivePublisher.setVideoOrientation(LivePublisher.VIDEO_ORI_PORTRAIT);
+//				 LivePublisher.setVideoOrientation(LivePublisher.VIDEO_ORI_LANDSCAPE);
 
 				/**
 				 * 设置发布模式 

@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		playUrl.setText(SharedPreUtil.getString(this, "playUrl", "rtmp://play.nodemedia.cn/NodeMedia/stream"));
 		pubUrl.setText(SharedPreUtil.getString(this, "pubUrl",
 				"rtmp://pub.nodemedia.cn/NodeMedia/stream_" + Math.round((Math.random() * 1000 + 1000))));
-		bufferTime.setText(SharedPreUtil.getString(this, "bufferTime", "300"));
+		bufferTime.setText(SharedPreUtil.getString(this, "bufferTime", "100"));
 		maxBufferTime.setText(SharedPreUtil.getString(this, "maxBufferTime", "1000"));
 		enablePlayCB.setChecked(SharedPreUtil.getBoolean(this, "enablePlayLog"));
 		enableVideoCB.setChecked((Boolean) SharedPreUtil.getBoolean(this, "enableVideo"));
