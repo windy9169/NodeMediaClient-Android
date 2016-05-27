@@ -105,6 +105,14 @@ public class LivePlayerDemoActivity extends Activity {
 //		LivePlayer.receiveAudio(true);
 //		LivePlayer.receiveVideo(false);
 		
+	    /**
+	     * 当设为true时，向服务端发送FCSubscribe命令，默认不发送
+	     * When streaming RTMP live streams using the Akamai, Edgecast or Limelight CDN,
+	     * players cannot simply connect to the live stream. Instead, they have to subscribe to it, 
+	     * by sending a so-called FC Subscribe call to the server.
+	     */
+		LivePlayer.subscribe(true);
+		
 		String playUrl = SharedPreUtil.getString(this, "playUrl");// 获取上一页设置的播放地址，非sdk方法
 		/**
 		 * 开始播放
