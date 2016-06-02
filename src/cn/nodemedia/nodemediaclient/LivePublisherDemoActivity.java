@@ -14,10 +14,10 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
-import cn.nodemedia.LivePublishDelegate;
+import cn.nodemedia.LivePublisherDelegate;
 import cn.nodemedia.LivePublisher;
 
-public class LivePublisherDemoActivity extends Activity implements OnClickListener, LivePublishDelegate {
+public class LivePublisherDemoActivity extends Activity implements OnClickListener, LivePublisherDelegate {
 	private GLSurfaceView glsv;
 	private Button micBtn, swtBtn, videoBtn, flashBtn, camBtn;
 	private SeekBar mLevelSB;
@@ -72,19 +72,36 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		LivePublisher.init(this); // 1.初始化
 		LivePublisher.setDelegate(this); // 2.设置事件回调
 
+		
 		/**
-		 * 设置输出音频参数 码率 32kbps 使用HE-AAC ,部分服务端不支持HE-AAC,会导致发布失败
+		 * 设置输出音频参数 
+		 * bitrate 码率 32kbps 
+		 * aacProfile 音频编码复杂度 部分服务端不支持HE-AAC,会导致发布失败，如果服务端支持，直接用HE-AAC
+		 *  AAC_PROFILE_LC		低复杂度编码
+		 * 	AAC_PROFILE_HE		高效能编码 ，能达到LC-AAC一半的码率传输相同的音质
 		 */
 		LivePublisher.setAudioParam(32 * 1000, LivePublisher.AAC_PROFILE_HE);
 
 		/**
-		 * 设置输出视频参数 宽 640 高 360 fps 15 码率 300kbps 以下建议分辨率及比特率 不用超过1280x720
-		 * 320X180@15 ~~ 200kbps 480X272@15 ~~ 250kbps 568x320@15 ~~ 300kbps
-		 * 640X360@15 ~~ 400kbps 720x405@15 ~~ 500kbps 854x480@15 ~~ 600kbps
-		 * 960x540@15 ~~ 700kbps 1024x576@15 ~~ 800kbps 1280x720@15 ~~ 1000kbps
-		 * 使用main profile
+		 * 设置输出视频参数
+		 * width 视频宽
+		 * height 视频高   注意，视频最终输出的高宽和发布方向有关，这里设置 16：9的分辨率就行，sdk自动切换。
+		 * fps    视频帧率
+		 * bitrate 视频码率	注意，sdk 1.0.1以后，视频码率为最大码率，可以比以前的版本值高一点，编码器自动调节
+		 * avcProfile  视频编码复杂度，高中低为三者比较相对而言。可根据应用场景选择
+		 * 	AVC_PROFILE_BASELINE		低CPU，低画质
+		 *  AVC_PROFILE_MAIN			中CPU，中画质
+		 *  AVC_PROFILE_HIGH			高CPU，高画质
+		 *  
+		 * 以下建议分辨率及比特率 不用超过1280x720
+		 * 320X180@15  ~~ 300kbps  ~~ baseline
+		 * 568x320@15  ~~ 400kbps  ~~ baseline
+		 * 640X360@15  ~~ 500kbps  ~~ main
+		 * 854x480@15  ~~ 600kbps  ~~ main
+		 * 960x540@15  ~~ 800kbps  ~~ high
+		 * 1280x720@15 ~~ 1000kbps ~~ high
 		 */
-		LivePublisher.setVideoParam(854, 480, 15, 600 * 1000, LivePublisher.AVC_PROFILE_MAIN);
+		LivePublisher.setVideoParam(640, 360, 15, 500 * 1000, LivePublisher.AVC_PROFILE_HIGH);
 
 		/**
 		 * 是否开启背景噪音抑制
