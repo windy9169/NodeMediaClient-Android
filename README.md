@@ -42,6 +42,7 @@ fms, wowza, evostream, red5, crtmpserver, nginx-rtmp-module, srs, Node-Media-Ser
 * 支持设置最大缓冲时长
 * 支持播放前设置receiveAudio,receiveVideo来控制只接收音频或视频流(需服务端实现，fms，red5支持)
 * 支持发送FCSubscribe命令，兼容国外Akamai, Edgecast , Limelight 等CDN
+* 支持主播停止推流后，播放端立即获取到结束状态（RTMP协议下）
 
 ##美颜直播
 1.x分支已实现OpenGL加速磨皮美颜算法，但限于Android平台硬件繁多，GPU显卡型号太多需要做大量兼容测试。为了实现向低版本系统兼容（小于4.3），低级别显卡兼容（不支持OpenGL ES 3.0），当前版本使用了Android私有api，或许不能通过Google Play审核。欢迎您提出宝贵意见和问题反馈。
