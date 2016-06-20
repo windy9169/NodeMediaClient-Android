@@ -159,12 +159,7 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		switch (arg0.getId()) {
 		case R.id.pub_cap_button:
 			String capFilePath = Environment.getExternalStorageDirectory().getPath() + "/pub_cap.jpg";
-			if (LivePublisher.capturePicture(capFilePath)) {
-				Toast.makeText(LivePublisherDemoActivity.this, "截图保存到 " + capFilePath, Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(LivePublisherDemoActivity.this, "截图保存失败", Toast.LENGTH_SHORT).show();
-			}
-
+			LivePublisher.capturePicture(capFilePath);//1.x版发布截图为异步操作,截图结果在EventCallback里返回
 			break;
 		case R.id.button_mic:
 			if (isStarting) {
@@ -286,8 +281,12 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 				//发布端网络恢复畅通
 				Toast.makeText(LivePublisherDemoActivity.this, "网络恢复，发布流畅", Toast.LENGTH_SHORT).show();
 				break;
-				
-				
+			case 2102:
+				Toast.makeText(LivePublisherDemoActivity.this, "截图保存成功", Toast.LENGTH_SHORT).show();
+				break;
+			case 2103:
+				Toast.makeText(LivePublisherDemoActivity.this, "截图保存失败", Toast.LENGTH_SHORT).show();
+				break;
 			case 3100:
 				// mic off
 				micBtn.setBackgroundResource(R.drawable.ic_mic_off);
