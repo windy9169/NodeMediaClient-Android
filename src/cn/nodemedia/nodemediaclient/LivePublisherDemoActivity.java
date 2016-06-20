@@ -101,13 +101,21 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		 * 960x540@15  ~~ 800kbps  ~~ high
 		 * 1280x720@15 ~~ 1000kbps ~~ high
 		 */
-		LivePublisher.setVideoParam(640, 360, 15, 500 * 1000, LivePublisher.AVC_PROFILE_HIGH);
+		LivePublisher.setVideoParam(640, 360, 15, 500 * 1000, LivePublisher.AVC_PROFILE_MAIN);
 
 		/**
 		 * 是否开启背景噪音抑制
 		 */
 		LivePublisher.setDenoiseEnable(true);
 
+		
+		/**
+		 * 设置美颜等级 
+		 * 0 -关闭美颜
+		 * 1 ~ 5 5个等级的美颜效果,值越大越亮磨皮越细,可随时调用
+		 */
+		LivePublisher.setSmoothSkinLevel(0);
+		
 		/**
 		 * 开始视频预览
 		 * cameraPreview ： 用以回显摄像头预览的GLSurfaceViewd对象，如果此参数传入null，则只发布音频
