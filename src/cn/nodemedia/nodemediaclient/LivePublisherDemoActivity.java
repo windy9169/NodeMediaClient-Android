@@ -101,7 +101,7 @@ public class LivePublisherDemoActivity extends Activity implements OnClickListen
 		 * 960x540@15  ~~ 800kbps  ~~ high
 		 * 1280x720@15 ~~ 1000kbps ~~ high
 		 */
-		LivePublisher.setVideoParam(640, 360, 15, 500 * 1000, LivePublisher.AVC_PROFILE_MAIN);
+		LivePublisher.setVideoParam(640, 360, 15, 500 * 1000, LivePublisher.AVC_PROFILE_HIGH);
 
 		/**
 		 * 是否开启背景噪音抑制
