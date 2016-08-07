@@ -40,6 +40,10 @@ fms, wowza, evostream, red5, crtmpserver, nginx-rtmp-module, srs, Node-Media-Ser
 * 支持播放中途任意时刻截图
 * 支持设置最大缓冲时长
 * 支持播放前设置receiveAudio,receiveVideo来控制只接收音频或视频流(需服务端实现，fms，red5支持)
+* 支持多路直播流同时播放，理论最大32路
+
+##关于多播
+NodeMediaClien从第一个版本提交以来，Android端始终是以单例静态方法来实现播放和发布的功能，限制了多播的实现。自推出以来，不少客户也反馈了诸如多人会议、多路监控、直播间多人联麦等需求。为了不影响旧版的使用，我们在Android端从v1.1.0版开始新增了NodePlayer类以提供同原来LivePlayer类一模一样的功能且支持多播。
 
 ##商用授权
 可在应用程序包名为cn.nodemedia.* 下试用体验  
