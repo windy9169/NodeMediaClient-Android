@@ -10,7 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 public class MainActivity extends Activity implements OnClickListener {
-	Button playerBtn, encoderBtn;
+	Button playerBtn, encoderBtn,nodePlayerBtn;
 	EditText playUrl, pubUrl, bufferTime,maxBufferTime;
 	CheckBox enablePlayCB, enableVideoCB;
 
@@ -20,6 +20,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		playerBtn = (Button) findViewById(R.id.button1);
 		encoderBtn = (Button) findViewById(R.id.button2);
+		nodePlayerBtn = (Button)findViewById(R.id.button3);
 		playUrl = (EditText) findViewById(R.id.editText_play_url);
 		pubUrl = (EditText) findViewById(R.id.editText_pub_url);
 		bufferTime = (EditText) findViewById(R.id.editText_buffersize);
@@ -28,8 +29,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		enableVideoCB = (CheckBox) findViewById(R.id.CheckBox_video);
 
 		playUrl.setText(SharedPreUtil.getString(this, "playUrl", "rtmp://play.nodemedia.cn/NodeMedia/stream"));
-		pubUrl.setText(SharedPreUtil.getString(this, "pubUrl",
-				"rtmp://pub.nodemedia.cn/NodeMedia/stream_" + Math.round((Math.random() * 1000 + 1000))));
+		pubUrl.setText(SharedPreUtil.getString(this, "pubUrl", "rtmp://stream.nodemedia.cn/live/streams"));
 		bufferTime.setText(SharedPreUtil.getString(this, "bufferTime", "100"));
 		maxBufferTime.setText(SharedPreUtil.getString(this, "maxBufferTime", "1000"));
 		enablePlayCB.setChecked(SharedPreUtil.getBoolean(this, "enablePlayLog"));
@@ -37,7 +37,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		playerBtn.setOnClickListener(this);
 		encoderBtn.setOnClickListener(this);
-
+		nodePlayerBtn.setOnClickListener(this);
 	}
 
 	@Override
@@ -58,6 +58,10 @@ public class MainActivity extends Activity implements OnClickListener {
 			SharedPreUtil.put(MainActivity.this, "pubUrl", pubUrl.getText().toString());
 
 			MainActivity.this.startActivity(new Intent(MainActivity.this, LivePublisherDemoActivity.class));
+			break;
+		case R.id.button3:
+			
+			MainActivity.this.startActivity(new Intent(MainActivity.this, NodePlayerDemoActivity.class));
 			break;
 		}
 	}

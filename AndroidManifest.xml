@@ -43,6 +43,12 @@
             android:configChanges="orientation|screenSize"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
+        
+         <activity
+            android:name="cn.nodemedia.nodemediaclient.NodePlayerDemoActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
     </application>
 
 </manifest>
