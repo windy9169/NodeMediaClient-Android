@@ -29,6 +29,7 @@ fms, wowza, evostream, red5, crtmpserver, nginx-rtmp-module, srs, Node-Media-Ser
 * 支持单音频流发布
 * 支持预览摄像头后,任意时刻截图
 * 支持定义为'live','record','append'的发布类型
+* 内置5级磨皮美白滤镜
 
 ##直播播放特性
 * 只为RTMP协议优化的码流解析器，极短的分析时间，秒开RTMP视频流
