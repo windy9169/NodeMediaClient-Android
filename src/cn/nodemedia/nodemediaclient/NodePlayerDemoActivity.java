@@ -31,6 +31,7 @@ public class NodePlayerDemoActivity extends Activity implements NodePlayerDelega
 		tbS = (ToggleButton) findViewById(R.id.toggleButton2);
 		tbP = (ToggleButton) findViewById(R.id.toggleButton3);
 
+		//这两个surfaceview覆盖于svB的上层，需要设置如下属性
 		svS.setZOrderMediaOverlay(true);
 		svP.setZOrderMediaOverlay(true);
 
@@ -42,6 +43,16 @@ public class NodePlayerDemoActivity extends Activity implements NodePlayerDelega
 		npS.setDelegate(this);
 		npP.setDelegate(this);
 
+		/**
+	     * 设置播放Surfaceview
+	     *   如果Surfaceview传入nil,则不解码播放视频,作为纯音频播放模式
+	     *   画面填充模式,当前支持下面三种现实模式，他们的差别是 
+	     *   当Surfaceview高宽比与视频高宽比不同时           视频画面是否铺满uiview |画面是否变形|有无黑边|视频画面是否会被裁剪
+	     *   拉伸填充 UIViewContentModeScaleToFill           是               |   是      |  无   | 否
+	     *   等比缩放 UIViewContentModeScaleAspectFit        否               |   否      |  有   | 否
+	     *   等比缩放填充 UIViewContentModeScaleAspectFill    是               |   否      |  无   | 是
+	     */
+		
 		npB.setSurfaceView(svB, NodePlayer.UIViewContentModeScaleAspectFit);
 		npS.setSurfaceView(svS, NodePlayer.UIViewContentModeScaleAspectFit);
 		npP.setSurfaceView(svP, NodePlayer.UIViewContentModeScaleAspectFit);
